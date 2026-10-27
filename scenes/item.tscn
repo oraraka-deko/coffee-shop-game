@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b2gtd58viutnu"]
+
+[ext_resource type="Script" uid="uid://35jsw60pew4x" path="res://scripts/item.gd" id="1_18sld"]
+
+[node name="Item" type="RigidBody3D" unique_id=1551819707]
+collision_layer = 4
+collision_mask = 5
+mass = 5.0
+script = ExtResource("1_18sld")

@@ -1,0 +1,56 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" uid="uid://b2gtd58viutnu" path="res://scenes/item.tscn" id="1_item"]
+[ext_resource type="Script" path="res://scripts/espresso_cup.gd" id="2_espresso"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceramic"]
+albedo_color = Color(0.95, 0.95, 0.93, 1)
+roughness = 0.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cup"]
+material = SubResource("StandardMaterial3D_ceramic")
+top_radius = 0.05
+bottom_radius = 0.038
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_inner"]
+albedo_color = Color(0.9, 0.9, 0.88, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_inner"]
+material = SubResource("StandardMaterial3D_inner")
+top_radius = 0.046
+bottom_radius = 0.036
+height = 0.095
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hitbox"]
+size = Vector3(0.12, 0.11, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_detector"]
+size = Vector3(0.09, 0.02, 0.09)
+
+[node name="EspressoCup" instance=ExtResource("1_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+script = ExtResource("2_espresso")
+
+[node name="Mesh" type="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("CylinderMesh_cup")
+
+[node name="Inner" type="MeshInstance3D" parent="Mesh" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+mesh = SubResource("CylinderMesh_inner")
+
+[node name="Hitbox" type="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_hitbox")
+
+[node name="Detector" type="Area3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+collision_layer = 0
+collision_mask = 4
+
+[node name="Hitbox" type="CollisionShape3D" parent="Detector" index="0"]
+shape = SubResource("BoxShape3D_detector")
+
+[connection signal="overflow" from="." to="." method="_on_overflow"]
+[connection signal="updated" from="." to="." method="_on_updated"]
+[connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]
+

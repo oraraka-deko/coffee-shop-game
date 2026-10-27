@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" uid="uid://dy5vb33uauebx" path="res://scenes/ingredient.tscn" id="1_ingredient"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sugar"]
+size = Vector3(0.08, 0.15, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glass"]
+albedo_color = Color(0.95, 0.95, 0.97, 0.85)
+roughness = 0.1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_shaker"]
+material = SubResource("StandardMaterial3D_glass")
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cap"]
+albedo_color = Color(0.8, 0.8, 0.85, 1)
+metallic = 0.85
+roughness = 0.25
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cap"]
+material = SubResource("StandardMaterial3D_cap")
+top_radius = 0.036
+bottom_radius = 0.036
+height = 0.02
+
+[node name="Sugar" instance=ExtResource("1_ingredient")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+metadata/id = "sugar"
+metadata/volume = 20.0
+
+[node name="Hitbox" type="CollisionShape3D" parent="." index="0"]
+shape = SubResource("BoxShape3D_sugar")
+
+[node name="Mesh" type="MeshInstance3D" parent="." index="1"]
+mesh = SubResource("CylinderMesh_shaker")
+
+[node name="Cap" type="MeshInstance3D" parent="Mesh" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0)
+mesh = SubResource("CylinderMesh_cap")
+

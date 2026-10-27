@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" uid="uid://b2gtd58viutnu" path="res://scenes/item.tscn" id="1_item"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_donut"]
+size = Vector3(0.12, 0.05, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dough"]
+albedo_color = Color(0.88, 0.64, 0.36, 1)
+roughness = 0.7
+
+[sub_resource type="TorusMesh" id="TorusMesh_dough"]
+material = SubResource("StandardMaterial3D_dough")
+inner_radius = 0.02
+outer_radius = 0.055
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_frosting"]
+albedo_color = Color(0.32, 0.16, 0.08, 1)
+roughness = 0.35
+
+[sub_resource type="TorusMesh" id="TorusMesh_frosting"]
+material = SubResource("StandardMaterial3D_frosting")
+inner_radius = 0.021
+outer_radius = 0.056
+
+[node name="Donut" instance=ExtResource("1_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+
+[node name="Hitbox" type="CollisionShape3D" parent="." index="0"]
+shape = SubResource("BoxShape3D_donut")
+
+[node name="Mesh" type="MeshInstance3D" parent="." index="1"]
+mesh = SubResource("TorusMesh_dough")
+
+[node name="Frosting" type="MeshInstance3D" parent="Mesh" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 0)
+mesh = SubResource("TorusMesh_frosting")
+

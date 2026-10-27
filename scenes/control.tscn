@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://co3cdoinawn14"]
+
+[node name="Control" type="Control" unique_id=1353438592]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 3.0
+offset_right = 1.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ReferenceRect" type="ReferenceRect" parent="." unique_id=916303097]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 398.0
+offset_right = 273.0
+offset_bottom = 438.0
+rotation = 0.2617994
+
+[node name="VirtualJoystick" type="VirtualJoystick" parent="ReferenceRect" unique_id=1437484196]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+joystick_size = 201.0
+visibility_mode = 1
