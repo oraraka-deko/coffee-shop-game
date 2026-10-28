@@ -27,6 +27,12 @@ func get_status_text() -> String:
 func is_pourable() -> bool:
 	return false
 
+func is_snack() -> bool:
+	if has_meta("is_snack") and get_meta("is_snack") == true:
+		return true
+	var lower = name.to_lower()
+	return lower.contains("donut") or lower.contains("pastry") or lower.contains("snack")
+
 func get_all_meshes() -> Array[MeshInstance3D]:
 	var meshes: Array[MeshInstance3D] = []
 	for child in find_children("*", "MeshInstance3D", true, false):

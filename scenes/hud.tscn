@@ -87,3 +87,115 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.9, 0.6, 1)
 theme_override_font_sizes/font_size = 11
 text = "• In Reach (1.2m)"
+
+[node name="StatsCard" type="PanelContainer" parent="RootControl"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -170.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 80.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="RootControl/StatsCard"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="RootControl/StatsCard/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="CashLabel" type="Label" parent="RootControl/StatsCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.88, 0.42, 1)
+theme_override_font_sizes/font_size = 16
+text = "💰  $0.00"
+
+[node name="ServedLabel" type="Label" parent="RootControl/StatsCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "Served: 0"
+
+[node name="HelpBtn" type="Button" parent="RootControl"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 110.0
+offset_bottom = 56.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 13
+text = "📖 Guide"
+
+[node name="GuideModal" type="PanelContainer" parent="RootControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -215.0
+offset_top = -185.0
+offset_right = 215.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="RootControl/GuideModal"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="RootControl/GuideModal/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="RootControl/GuideModal/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.35, 1)
+theme_override_font_sizes/font_size = 16
+text = "☕ BARISTA TRAINING GUIDE"
+horizontal_alignment = 1
+
+[node name="Step1" type="Label" parent="RootControl/GuideModal/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "1. 🍵 Grab an Empty Cup: Touch/Click & hold an empty cup from the counter or shelves."
+autowrap_mode = 2
+
+[node name="Step2" type="Label" parent="RootControl/GuideModal/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "2. 🥛 Brew the Order: Check customer order bubble. Drop coffee powder in, or tilt milk/syrups to pour!"
+autowrap_mode = 2
+
+[node name="Step3" type="Label" parent="RootControl/GuideModal/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "3. 🛎️ Serve & Earn Tips: Place the cup on the counter in front of the customer to earn cash & big tips!"
+autowrap_mode = 2
+
+[node name="Step4" type="Label" parent="RootControl/GuideModal/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.65, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "4. 🍩 Snack Tip: If patience turns red, feed them a donut from the counter to restore +40% patience!"
+autowrap_mode = 2
+
+[node name="StartShiftBtn" type="Button" parent="RootControl/GuideModal/Margin/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 13
+text = "LET'S BREW! ☕"

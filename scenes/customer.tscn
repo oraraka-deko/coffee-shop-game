@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/customer.gd" id="1_customer"]
+[ext_resource type="PackedScene" path="res://scenes/speech_bubble.tscn" id="2_bubble"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hitbox"]
+radius = 0.35
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
+albedo_color = Color(1, 0.76, 0.62, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+material = SubResource("StandardMaterial3D_head")
+radius = 0.32
+height = 0.64
+radial_segments = 16
+rings = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eye_white"]
+albedo_color = Color(0.98, 0.98, 0.98, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye_white"]
+material = SubResource("StandardMaterial3D_eye_white")
+radius = 0.08
+height = 0.16
+radial_segments = 8
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pupil"]
+albedo_color = Color(0.12, 0.08, 0.06, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_pupil"]
+material = SubResource("StandardMaterial3D_pupil")
+radius = 0.035
+height = 0.07
+radial_segments = 8
+rings = 6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pickup"]
+size = Vector3(0.65, 0.8, 0.65)
+
+[node name="Customer" type="CharacterBody3D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_customer")
+
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("CapsuleShape3D_hitbox")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("SphereMesh_head")
+
+[node name="EyeLeft" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.06, -0.26)
+mesh = SubResource("SphereMesh_eye_white")
+
+[node name="Pupil" type="MeshInstance3D" parent="Mesh/EyeLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.05)
+mesh = SubResource("SphereMesh_pupil")
+
+[node name="EyeRight" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.06, -0.26)
+mesh = SubResource("SphereMesh_eye_white")
+
+[node name="Pupil" type="MeshInstance3D" parent="Mesh/EyeRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.05)
+mesh = SubResource("SphereMesh_pupil")
+
+[node name="AccessoryRoot" type="Node3D" parent="Mesh"]
+
+[node name="SpeechBubble" parent="." instance=ExtResource("2_bubble")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 0)
+
+[node name="OrderPickup" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, -0.8)
+collision_layer = 0
+collision_mask = 4
+
+[node name="Hitbox" type="CollisionShape3D" parent="OrderPickup"]
+shape = SubResource("BoxShape3D_pickup")
+
+[connection signal="body_entered" from="OrderPickup" to="." method="_on_order_pickup_body_entered"]
+

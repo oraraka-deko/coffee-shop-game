@@ -1,5 +1,19 @@
 extends Node
 
+var total_cash: float = 0.0
+var orders_served_count: int = 0
+
+signal cash_changed(new_amount: float, gained: float)
+signal order_completed(total_count: int)
+
+func add_cash(amount: float) -> void:
+	total_cash += amount
+	cash_changed.emit(total_cash, amount)
+
+func record_order_served() -> void:
+	orders_served_count += 1
+	order_completed.emit(orders_served_count)
+
 var DRINKS = {
 	# Drink ID
 	"ESPRESSO": {

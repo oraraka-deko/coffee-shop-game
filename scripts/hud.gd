@@ -10,6 +10,12 @@ class_name GameHUD extends CanvasLayer
 @onready var item_badge_label: Label = $RootControl/InfoCard/MarginContainer/VBox/HeaderRow/Badge
 @onready var action_prompt_label: Label = $RootControl/InfoCard/MarginContainer/VBox/ActionPrompt
 @onready var distance_label: Label = $RootControl/InfoCard/MarginContainer/VBox/DistanceLabel
+@onready var stats_card: PanelContainer = $RootControl/StatsCard
+@onready var cash_label: Label = $RootControl/StatsCard/Margin/VBox/CashLabel
+@onready var served_label: Label = $RootControl/StatsCard/Margin/VBox/ServedLabel
+@onready var help_btn: Button = $RootControl/HelpBtn
+@onready var guide_modal: PanelContainer = $RootControl/GuideModal
+@onready var start_shift_btn: Button = $RootControl/GuideModal/Margin/VBox/StartShiftBtn
 
 # State
 var current_target: Node = null
@@ -39,6 +45,100 @@ func _ready() -> void:
 	has_touch = DisplayServer.is_touchscreen_available()
 	_find_and_connect_raycast()
 	_setup_card_style()
+	_setup_stats_card()
+	_setup_guide_modal()
+
+func _setup_guide_modal() -> void:
+	if not guide_modal or not help_btn:
+		return
+	
+	# Style Help button
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color(0.12, 0.09, 0.07, 0.85)
+	btn_style.border_color = Color(0.92, 0.68, 0.25, 0.8)
+	btn_style.set_border_width_all(1)
+	btn_style.set_corner_radius_all(8)
+	help_btn.add_theme_stylebox_override("normal", btn_style)
+	
+	var btn_hover = btn_style.duplicate()
+	btn_hover.bg_color = Color(0.22, 0.16, 0.12, 0.95)
+	btn_hover.border_color = Color(1.0, 0.85, 0.4, 1.0)
+	help_btn.add_theme_stylebox_override("hover", btn_hover)
+	help_btn.add_theme_stylebox_override("pressed", btn_hover)
+	if not help_btn.pressed.is_connected(_on_help_btn_pressed):
+		help_btn.pressed.connect(_on_help_btn_pressed)
+	
+	# Style Guide Modal
+	var modal_style = StyleBoxFlat.new()
+	modal_style.bg_color = Color(0.08, 0.06, 0.05, 0.95)
+	modal_style.border_color = Color(0.92, 0.68, 0.25, 0.9)
+	modal_style.set_border_width_all(2)
+	modal_style.set_corner_radius_all(12)
+	modal_style.shadow_color = Color(0, 0, 0, 0.6)
+	modal_style.shadow_size = 12
+	guide_modal.add_theme_stylebox_override("panel", modal_style)
+	
+	if start_shift_btn:
+		var start_btn_style = StyleBoxFlat.new()
+		start_btn_style.bg_color = Color(0.78, 0.45, 0.15, 0.95)
+		start_btn_style.border_color = Color(0.98, 0.85, 0.45, 1.0)
+		start_btn_style.set_border_width_all(1)
+		start_btn_style.set_corner_radius_all(8)
+		start_shift_btn.add_theme_stylebox_override("normal", start_btn_style)
+		var start_btn_hover = start_btn_style.duplicate()
+		start_btn_hover.bg_color = Color(0.92, 0.55, 0.2, 1.0)
+		start_shift_btn.add_theme_stylebox_override("hover", start_btn_hover)
+		start_shift_btn.add_theme_stylebox_override("pressed", start_btn_hover)
+		if not start_shift_btn.pressed.is_connected(_on_start_shift_pressed):
+			start_shift_btn.pressed.connect(_on_start_shift_pressed)
+		
+	# Show guide initially if player hasn't served orders yet
+	if is_inside_tree() and get_node_or_null("/root/Global"):
+		var g = get_node("/root/Global")
+		if g.orders_served_count == 0:
+			guide_modal.visible = true
+
+func _on_help_btn_pressed() -> void:
+	if guide_modal:
+		guide_modal.visible = not guide_modal.visible
+
+func _on_start_shift_pressed() -> void:
+	if guide_modal:
+		guide_modal.visible = false
+
+func _setup_stats_card() -> void:
+	if not stats_card:
+		return
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.09, 0.07, 0.05, 0.88)
+	style.border_color = Color(0.92, 0.68, 0.25, 0.75)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(10)
+	style.shadow_color = Color(0, 0, 0, 0.35)
+	style.shadow_size = 5
+	stats_card.add_theme_stylebox_override("panel", style)
+
+	if is_inside_tree() and get_node_or_null("/root/Global"):
+		var g = get_node("/root/Global")
+		if not g.cash_changed.is_connected(_on_cash_changed):
+			g.cash_changed.connect(_on_cash_changed)
+		if not g.order_completed.is_connected(_on_order_completed):
+			g.order_completed.connect(_on_order_completed)
+		cash_label.text = "💰  $%.2f" % g.total_cash
+		served_label.text = "Served: %d" % g.orders_served_count
+
+func _on_cash_changed(new_amount: float, gained: float) -> void:
+	cash_label.text = "💰  $%.2f" % new_amount
+	# Green flash & punch scale on earning money
+	var tween = create_tween()
+	cash_label.modulate = Color(0.35, 1.0, 0.5)
+	tween.tween_property(stats_card, "scale", Vector2(1.08, 1.08), 0.12)
+	tween.tween_property(stats_card, "scale", Vector2.ONE, 0.15)
+	tween.tween_property(cash_label, "modulate", Color(0.98, 0.88, 0.42), 0.4)
+
+func _on_order_completed(total_count: int) -> void:
+	served_label.text = "Served: %d" % total_count
+
 
 func _find_and_connect_raycast() -> void:
 	if not drag_raycast:
@@ -201,6 +301,9 @@ func _display_holding_card() -> void:
 	elif is_instance_valid(target_cup) and item_name.to_lower().contains("coffee"):
 		prompt = drop_cue + " Drop into Cup to add Coffee!"
 		action_prompt_label.modulate = Color(0.35, 0.95, 0.6)
+	elif held_object.has_method("is_snack") and held_object.is_snack():
+		prompt = drop_cue + " onto Counter to feed Customer (+Patience!)"
+		action_prompt_label.modulate = Color(0.95, 0.5, 0.75)
 	else:
 		action_prompt_label.modulate = Color(0.4, 0.85, 1.0)
 
