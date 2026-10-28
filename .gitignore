@@ -22,3 +22,5 @@ mono_crash.*.blob
 
 # Visual Studio Code
 /.vscode/
+./ex
+ex/*
